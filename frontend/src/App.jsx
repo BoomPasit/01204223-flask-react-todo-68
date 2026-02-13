@@ -1,6 +1,4 @@
 import { useState, useEffect } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 import TodoItem from './TodoItem'
 
@@ -9,7 +7,6 @@ function App() {
 
   const [todoList, setTodoList] = useState([]);
   const [newTitle, setNewTitle] = useState("");
-  const [newComments, setNewComments] = useState({});
 
   useEffect(() => {
     fetchTodoList();
@@ -107,7 +104,6 @@ function App() {
             addNewComment={addNewComment}
           />
         ))}
-
       </ul>
       New: <input type="text" value={newTitle} onChange={(e) => { setNewTitle(e.target.value) }} />
       <button onClick={() => { addNewTodo() }}>Add</button>
