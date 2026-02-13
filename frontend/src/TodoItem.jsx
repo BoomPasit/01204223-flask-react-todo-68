@@ -3,14 +3,20 @@ import { useState } from 'react'
 
 function TodoItem({ todo, toggleDone, deleteTodo, addNewComment }) {
     const [newComment, setNewComment] = useState("");
+
     return (
         <li>
             <span className={todo.done ? "done" : ""}>{todo.title}</span>
             <button onClick={() => { toggleDone(todo.id) }}>Toggle</button>
             <button onClick={() => { deleteTodo(todo.id) }}>❌</button>
-            {(todo.comments) && (todo.comments.length > 0) && (
+
+            {/* ส่วนที่แก้ไข: แสดง No comments หรือ รายการ Comments พร้อมตัวเลข */}
+            {!todo.comments || todo.comments.length === 0 ? (
+                <div>No comments</div>
+            ) : (
                 <>
-                    <b>Comments:</b>
+                    {/* *** จุดที่ต้องแก้คือบรรทัดนี้ครับ ใส่ .length ลงไปเพื่อให้มีตัวเลขแสดง *** */}
+                    <b>Comments ({todo.comments.length}):</b>
                     <ul>
                         {todo.comments.map(comment => (
                             <li key={comment.id}>{comment.message}</li>
@@ -18,6 +24,7 @@ function TodoItem({ todo, toggleDone, deleteTodo, addNewComment }) {
                     </ul>
                 </>
             )}
+
             <div className="new-comment-forms">
                 <input
                     type="text"
@@ -27,15 +34,12 @@ function TodoItem({ todo, toggleDone, deleteTodo, addNewComment }) {
                         setNewComment(value);
                     }}
                 />
-
-                {/* *** ปุ่มนี้ทดสอบว่าอัพเดท state newComments ถูกต้อง *** */}
                 <button onClick={() => {
                     addNewComment(todo.id, newComment);
                     setNewComment("");
                 }}>Add Comment</button>
             </div>
         </li>
-
     )
 }
 
