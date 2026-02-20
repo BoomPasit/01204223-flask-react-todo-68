@@ -109,6 +109,7 @@ function App() {
       <button onClick={() => { addNewTodo() }}>Add</button>
     </>
   )
+  
 }
 
 export default App
