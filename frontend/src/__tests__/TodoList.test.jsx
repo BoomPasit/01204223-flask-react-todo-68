@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { vi } from 'vitest'
-import App from '../App.jsx'
+import TodoList from '../TodoList.jsx'
+import { useAuth } from '../context/AuthContext';
 
 const todoItem1 = { id: 1, title: 'First todo', done: false, comments: [] };
 const todoItem2 = {
@@ -24,9 +25,18 @@ const mockResponse = (body, ok = true) =>
         json: () => Promise.resolve(body),
     });
 
-describe('App', () => {
+vi.mock('../context/AuthContext', () => ({
+  useAuth: vi.fn(),
+}));
+
+describe('TodoList', () => {
     beforeEach(() => {
         vi.stubGlobal('fetch', vi.fn());
+        useAuth.mockReturnValue({
+            username: 'testuser',
+            login: vi.fn(),
+            logout: vi.fn(),
+        });
     });
 
     afterEach(() => {
@@ -39,7 +49,7 @@ describe('App', () => {
             mockResponse(originalTodoList), // ใช้ตัวแปร originalTodoList เลยเพื่อความกระชับ
         );
 
-        render(<App />);
+        render(<TodoList />);
 
         expect(await screen.findByText('First todo')).toBeInTheDocument();
         expect(await screen.findByText('Second todo')).toBeInTheDocument();
@@ -56,7 +66,7 @@ describe('App', () => {
             .mockImplementationOnce(() => mockResponse(originalTodoList))
             .mockImplementationOnce(() => mockResponse(toggledTodoItem1));
 
-        render(<App />);
+        render(<TodoList />);
 
         // assert ก่อนว่าของเดิม todo item แรกไม่ได้มีคลาส done
         expect(await screen.findByText('First todo')).not.toHaveClass('done');
